@@ -204,8 +204,31 @@ def get_information(s: DPSSession, args: Args):
     with SectionWriter("hardware") as w:
         w.append_json(s.query_get('hardware?select=*'))
 
+    volume = s.query_get('volume?select=*')
     with SectionWriter("volume") as w:
-        w.append_json(s.query_get('volume?select=*'))
+        w.append_json(volume)
+
+    # Map replication_session.id -> volume.name using volume.metro_replication_session_id
+    metro_name_by_session_id = {}
+    for v in volume:
+        sid = v.get("metro_replication_session_id")
+        vname = v.get("name") or v.get("display_name") or v.get("description")
+        if sid and vname:
+            metro_name_by_session_id[str(sid)] = str(vname)
+
+    replication = s.query_get('replication_session?select=*')
+
+    # Enrich replication sessions with GUI "Resource" name
+    for rs in replication:
+        sid = rs.get("id")
+        if sid:
+            rs["resource_name"] = metro_name_by_session_id.get(str(sid))
+        if not rs.get("resource_name"):
+            # Fallback if not found (keep it safe)
+            rs["resource_name"] = str(rs.get("local_resource_id") or sid or "<unknown>")
+
+    with SectionWriter("replication_session") as w:
+        w.append_json(replication)
 
 #    with SectionWriter("performance_metrics_by_appliance") as w:
 #        d = []
