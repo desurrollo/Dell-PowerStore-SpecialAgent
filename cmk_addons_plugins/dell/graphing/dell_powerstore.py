@@ -105,22 +105,6 @@ graph_physical_percent = Graph(
     ),
 )
 
-metric_data_reduction = Metric(
-    name="data_reduction",
-    title=Title("Data Reduction Ratio"),
-    unit=UNIT_NUMBER,
-    color=Color.LIGHT_PURPLE,
-)
-
-graph_data_reduction = Graph(
-    name="data_reduction",
-    title=Title("Data Reduction Ratio"),
-    simple_lines=(
-        "data_reduction",
-    ),
-)
-
-
 perfometer_physical_percent = Perfometer(
     name="physical_used_percent",
     focus_range=FocusRange(Closed(0), Closed(100)),
