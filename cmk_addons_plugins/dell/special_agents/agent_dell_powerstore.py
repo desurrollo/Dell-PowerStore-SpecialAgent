@@ -60,7 +60,7 @@ def parse_arguments(argv: Sequence[str] | None) -> Args:
 
     parser.add_argument("--ca-bundle",
         type=file_path,
-        default='/etc/ssl/certs/ca-certificates.crt',
+        default='/etc/ssl/certs/ca-bundle.crt',
         help="""Set the path to CA BUNDLE for SSL server certificate verification.""")
     parser.add_argument(
         "-t",
